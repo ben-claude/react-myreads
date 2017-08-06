@@ -17,7 +17,7 @@ class SearchBooksResults extends Component {
   clear = () => (
     this.setState({ matchedBooks: [] })
   )
-  // react "re-rendering" lifecycle event
+  // react "re-rendering" lifecycle event (cf https://engineering.musefind.com/react-lifecycle-methods-how-and-when-to-use-them-2111a1b692b1)
   componentWillReceiveProps(nextProps) {
     /* 
     - The search from BooksAPI is limited to a particular set of search terms.
@@ -59,6 +59,7 @@ class SearchBooksResults extends Component {
     this.mounted = false
   }
   render() {
+    // if a matched book is already in our shelves replace it with the book of the shelf
     const showingBooks = this.state.matchedBooks.map((matchedBook) => {
       var shelvesBooks = this.props.books.filter((book) => (book.id === matchedBook.id))
       if (shelvesBooks.length > 1) {

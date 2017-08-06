@@ -9,11 +9,20 @@ class BooksApp extends Component {
   state = {
     books: []
   }
-  onBookModified = (bookId, newShelf) => {
-    // no "optimistic" update of the state to keep code simple (use redux-optimist package ?)
-    BooksAPI.update({ id: bookId }, newShelf).then(() => (
-      this.refresh()
-    ))
+  onBookModified = (book, newShelf) => {
+    if (book.shelf !== newShelf) {
+      // no "optimistic" update of the state to keep code simple: wait for the server response to update the state
+      BooksAPI.update(book, newShelf).then(() => {
+        // do not call refresh() here because it is too slow
+        book.shelf = newShelf // use the book coming from SearchBooksResults to replace the same book in this.state
+        this.setState(state => (
+          {
+            books: this.state.books.filter(b => b.id !== book.id) // remove the previous version of the book
+                                   .concat([ book ]) // replace it with the modified book
+          }
+        ))
+      })
+    }
   }
   refresh = () => (
     BooksAPI.getAll().then((books) => (

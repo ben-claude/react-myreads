@@ -25,7 +25,7 @@ function Book(props) {
         )}
 
         <div className="book-shelf-changer">
-          <select value={book.shelf} onChange={(event) => props.onBookModified(book.id, event.target.value)}>
+          <select value={book.shelf} onChange={(event) => props.onBookModified(book, event.target.value)}>
             { option(0, "none", "Move to...", true) }
             { shelves().map((shelf, index) => (
               option(index + 1, shelf.key, shelf.title, false) 
